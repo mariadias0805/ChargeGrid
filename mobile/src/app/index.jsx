@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
 import { Redirect } from "expo-router";
+import { LogBox } from "react-native";
 
-import { getStations } from "../../services/api";
+  LogBox.ignoreAllLogs();
 
 export default function Home() {
   return <Redirect href="/SplashScreen" />;

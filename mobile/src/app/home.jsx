@@ -2,57 +2,56 @@ import { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   ScrollView,
   FlatList,
+  Image,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import Svg, { Circle } from "react-native-svg";
 import { router } from "expo-router";
+import BottomNav from "../components/BottomNav";
 
+/* ---------- Paleta (mesma do login / splash) ---------- */
+const YELLOW = "#FFD900";
+const YELLOW_LIGHT = "#FFE94A";
+const DARK = "#050505";
+const GRAY_LIGHT = "#E5E5E5";
+const GRAY_MEDIUM = "#A6A6A6";
+const GRAY_DARK = "#333333";
+const GREEN = "#2ECC71";
 
-const YELLOW = "#FFD400";
-const YELLOW_LIGHT = "#FFF3B0";
-const DARK = "#111111";
-
-const STATIONS = [
+const SESSIONS = [
   {
     id: "1",
-    name: "ChargeGrid Faria Lima",
-    address: "Av. Brig. Faria Lima, 1200",
-    distance: "0.8 km",
-    price: "R$ 1,89/kWh",
-    available: 3,
-    total: 6,
+    price: "R$ 3,33",
+    kwh: "8.5 kWh",
+    date: "12 fev 2026",
+    duration: "42 min",
   },
   {
     id: "2",
-    name: "ChargeGrid Pinheiros",
-    address: "R. dos Pinheiros, 450",
-    distance: "1.4 km",
-    price: "R$ 2,10/kWh",
-    available: 1,
-    total: 4,
-  },
-  {
-    id: "3",
-    name: "ChargeGrid Vila Olímpia",
-    address: "R. Fidêncio Ramos, 302",
-    distance: "2.1 km",
-    price: "R$ 1,95/kWh",
-    available: 5,
-    total: 8,
+    price: "R$ 5,00",
+    kwh: "6.5 kWh",
+    date: "20 fev 2026",
+    duration: "40 min",
   },
 ];
 
 export default function Home() {
-  const [search, setSearch] = useState("");
+  const [battery] = useState(62);
 
-  function handleMapa() {
-    router.replace("/map");
-    return;
+  function handleStartCharging() {
+    router.push({
+      pathname: "/select-charger",
+      params: { chargerName: "ChargeOn Highway Hub", pricePerKwh: "0.89" },
+    });
+  }
+
+  function handleWallet() {
+    router.push("/wallet");
   }
 
   return (
@@ -61,147 +60,149 @@ export default function Home() {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Cabeçalho */}
+        {/* Cabeçalh */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Olá, Yasmin </Text>
-            <Text style={styles.greetingSub}>Vamos carregar hoje?</Text>
+            <Text style={styles.greeting}>Boa noite, Yasmin !</Text>
           </View>
+          <View style={styles.avatar}>
+            <Image
+              source={require("../images/logo.png")}
+              style={styles.avatarLogo}
+              resizeMode="contain"
+            />
+          </View>
+        </View>
 
-          <View style={styles.headerIcons}>
-            <TouchableOpacity style={styles.iconButton}>
-              <Feather name="bell" size={20} color="#111111" />
-              <View style={styles.iconDot} />
-            </TouchableOpacity>
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>M</Text>
+        {/* Medidor circular de bateria */}
+        <View style={styles.batteryCard}>
+          <View style={styles.gaugeWrapper}>
+            <CircularProgress
+              percentage={battery}
+              size={168}
+              strokeWidth={14}
+            />
+            <View style={styles.gaugeCenter}>
+              <Text style={styles.gaugePercent}>{battery}%</Text>
+              <Text style={styles.gaugeLabel}>22 km restantes</Text>
+            </View>
+            <View style={styles.healthBadge}>
+              {/* Health bateria */}
+              <Text style={styles.healthBadgeText}>88%</Text>
             </View>
           </View>
         </View>
 
-        {/* Busca */}
-        <View style={styles.searchWrapper}>
-          <Feather
-            name="search"
-            size={18}
-            color="#9A9A9A"
-            style={{ marginRight: 8 }}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar estação de carregamento"
-            placeholderTextColor="#999"
-            value={search}
-            onChangeText={setSearch}
-          />
-          <TouchableOpacity style={styles.filterButton}>
-            <Feather name="sliders" size={16} color="#111111" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Card do veículo */}
-        <View style={styles.vehicleCard}>
+        {/* Saldo da carteira */}
+        <View style={styles.walletCard}>
+          <View style={styles.walletIconWrap}>
+            <Feather name="credit-card" size={20} color={YELLOW} />
+          </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.vehicleLabel}>Seu veículo</Text>
-            <Text style={styles.vehicleName}>Tesla Model 3</Text>
-
-            <View style={styles.batteryRow}>
-              <View style={styles.batteryBarBg}>
-                <View style={[styles.batteryBarFill, { width: "72%" }]} />
-              </View>
-              <Text style={styles.batteryPercent}>72%</Text>
-            </View>
-
-            <Text style={styles.vehicleRange}>Autonomia estimada: 312 km</Text>
+            <Text style={styles.walletLabel}>Saldo da carteira</Text>
+            <Text style={styles.walletValue}>R$ 1.250,00</Text>
           </View>
-
-          <View style={styles.vehicleIconWrap}>
-            <Feather name="zap" size={26} color={DARK} />
-          </View>
-        </View>
-
-        {/* Mapa (placeholder) */}
-        <TouchableOpacity style={styles.mapCard} activeOpacity={0.9}>
-          <View style={styles.mapPlaceholder}>
-            <Feather name="map" size={22} color="#777" />
-            <Text style={styles.mapPlaceholderText}>Ver mapa de estações</Text>
-          </View>
-          <View style={styles.mapPin}>
-            <Feather name="map-pin" size={16} color="#111111" />
-          </View>
-        </TouchableOpacity>
-
-        {/* Estações próximas */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Estações próximas</Text>
-          <TouchableOpacity>
-            <Text style={styles.sectionLink}>Ver todas</Text>
+          <TouchableOpacity
+            style={styles.rechargeButton}
+            onPress={handleWallet}
+          >
+            <Text style={styles.rechargeButtonText}>Recarregar</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Carregador mais próximo */}
+        <Text style={styles.sectionTitle}>Carregador DC mais próximo</Text>
+
+        <View style={styles.chargerCard}>
+          <View style={styles.chargerHeaderRow}>
+            <Text style={styles.chargerName}>ChargeOn Highway Hub</Text>
+            <View style={styles.availableDot} />
+          </View>
+
+          <View style={styles.chargerMetaRow}>
+            <Feather name="zap" size={13} color={GRAY_MEDIUM} />
+            <Text style={styles.chargerMetaText}>60kW DC Fast</Text>
+            <Text style={styles.chargerDot}>•</Text>
+            <Feather name="map-pin" size={13} color={GRAY_MEDIUM} />
+            <Text style={styles.chargerMetaText}>1.6 km de distância</Text>
+          </View>
+
+          <View style={styles.chargerFooterRow}>
+            <Text style={styles.chargerPrice}>R$ 0,89 / kWh</Text>
+            <TouchableOpacity
+              style={styles.startButton}
+              onPress={handleStartCharging}
+            >
+              <Text style={styles.startButtonText}>Iniciar carregamento</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Últimas sessões */}
+        <Text style={styles.sectionTitle}>Última sessão de carregamento</Text>
 
         <FlatList
-          data={STATIONS}
+          data={SESSIONS}
           keyExtractor={(item) => item.id}
           scrollEnabled={false}
-          contentContainerStyle={{ gap: 12 }}
+          contentContainerStyle={{ gap: 10 }}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.stationCard} activeOpacity={0.85}>
-              <View style={styles.stationIconWrap}>
-                <Feather name="zap" size={20} color={DARK} />
+            <View style={styles.sessionCard}>
+              <View style={styles.sessionIconWrap}>
+                <Feather name="clock" size={16} color={DARK} />
               </View>
-
               <View style={{ flex: 1 }}>
-                <Text style={styles.stationName}>{item.name}</Text>
-                <Text style={styles.stationAddress}>{item.address}</Text>
-
-                <View style={styles.stationMetaRow}>
-                  <Feather name="map-pin" size={12} color="#888" />
-                  <Text style={styles.stationMetaText}>{item.distance}</Text>
-                  <Text style={styles.stationDot}>•</Text>
-                  <Text style={styles.stationMetaText}>{item.price}</Text>
-                </View>
+                <Text style={styles.sessionPrice}>{item.price}</Text>
+                <Text style={styles.sessionMeta}>
+                  {item.kwh} · {item.date} · Duração {item.duration}
+                </Text>
               </View>
-
-              <View style={styles.stationAvailability}>
-                <Text style={styles.stationAvailableNum}>{item.available}</Text>
-                <Text style={styles.stationAvailableOf}>/{item.total}</Text>
-              </View>
-            </TouchableOpacity>
+            </View>
           )}
         />
       </ScrollView>
 
-      {/* Barra de navegação inferior */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Feather name="home" size={22} color={DARK} />
-          <Text style={styles.navLabelActive}>Início</Text>
-        </TouchableOpacity>
+      {/* Barra de navegação inferior — puxada mais pra cima */}
 
-        <TouchableOpacity style={styles.navItem} onPress={handleMapa}>
-          <Feather name="map" size={22} color="#AAAAAA" />
-          <Text style={styles.navLabel}>Mapa</Text>
-          onc
-        </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navCenterButton}>
-          <Feather name="zap" size={24} color="#111111" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Feather name="credit-card" size={22} color="#AAAAAA" />
-          <Text style={styles.navLabel}>Carteira</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Feather name="user" size={22} color="#AAAAAA" />
-          <Text style={styles.navLabel}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomNav />
     </SafeAreaView>
+  );
+}
+
+/* ---------- Medidor circular (SVG) ---------- */
+function CircularProgress({ percentage, size, strokeWidth }) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference * (1 - percentage / 100);
+
+  return (
+    <View style={{ transform: [{ rotate: "-90deg" }] }}>
+      <Svg width={size} height={size}>
+        <Circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={GRAY_LIGHT}
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+        <Circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={YELLOW}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          fill="none"
+        />
+      </Svg>
+    </View>
   );
 }
 
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
   topBlobRight: {
     position: "absolute",
     top: -70,
-    right: -90,
+    right: 0,
     width: 240,
     height: 200,
     backgroundColor: YELLOW_LIGHT,
@@ -226,319 +227,240 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
+  scrollContent: {
+    paddingBottom: 16,
+  },
+
+  /* Header mais pra baixo */
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 20,
+    paddingTop: 30,
   },
 
   greeting: {
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: "800",
     color: DARK,
   },
 
   greetingSub: {
     fontSize: 13,
-    color: "#777777",
+    color: GRAY_MEDIUM,
     marginTop: 2,
-  },
-
-  headerIcons: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-
-  iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#EEEEEE",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  iconDot: {
-    position: "absolute",
-    top: 8,
-    right: 9,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#FF3B30",
   },
 
   avatar: {
-    width: 40,
-    height: 40,
+    width: 80,
+    height: 80,
     borderRadius: 12,
-    backgroundColor: DARK,
+    borderWidth: 0,
     alignItems: "center",
     justifyContent: "center",
-  },
-
-  avatarText: {
-    color: YELLOW,
-    fontWeight: "800",
-    fontSize: 15,
-  },
-
-  searchWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#DDDDDD",
-    borderRadius: 14,
-    paddingHorizontal: 14,
-    marginTop: 22,
-    backgroundColor: "#FAFAFA",
-  },
-
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    color: "#111111",
-  },
-
-  filterButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    backgroundColor: YELLOW,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  vehicleCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: DARK,
-    borderRadius: 18,
-    padding: 18,
-    marginTop: 18,
-  },
-
-  vehicleLabel: {
-    color: "#AAAAAA",
-    fontSize: 12,
-  },
-
-  vehicleName: {
-    color: "#FFFFFF",
-    fontSize: 17,
-    fontWeight: "800",
-    marginTop: 2,
-  },
-
-  batteryRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 12,
-    gap: 8,
-  },
-
-  batteryBarBg: {
-    flex: 1,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#333333",
     overflow: "hidden",
   },
 
-  batteryBarFill: {
+  avatarLogo: {
+    width: "100%",
     height: "100%",
-    borderRadius: 4,
-    backgroundColor: YELLOW,
   },
 
-  batteryPercent: {
-    color: "#FFFFFF",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-
-  vehicleRange: {
-    color: "#999999",
-    fontSize: 12,
-    marginTop: 8,
-  },
-
-  vehicleIconWrap: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: YELLOW,
+  batteryCard: {
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 12,
+    marginTop: 26,
   },
 
-  mapCard: {
-    marginTop: 16,
-    borderRadius: 18,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "#EEEEEE",
-  },
-
-  mapPlaceholder: {
-    height: 120,
-    backgroundColor: "#F5F5F5",
+  gaugeWrapper: {
     alignItems: "center",
     justifyContent: "center",
-    gap: 6,
   },
 
-  mapPlaceholderText: {
-    fontSize: 13,
-    color: "#777777",
-    fontWeight: "600",
-  },
-
-  mapPin: {
+  gaugeCenter: {
     position: "absolute",
-    top: 12,
-    right: 12,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: YELLOW,
     alignItems: "center",
-    justifyContent: "center",
   },
 
-  sectionHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 24,
-    marginBottom: 12,
-  },
-
-  sectionTitle: {
-    fontSize: 17,
+  gaugePercent: {
+    fontSize: 34,
     fontWeight: "800",
     color: DARK,
   },
 
-  sectionLink: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#111111",
-    textDecorationLine: "underline",
-    textDecorationColor: YELLOW,
+  gaugeLabel: {
+    fontSize: 12,
+    color: GRAY_MEDIUM,
+    marginTop: 4,
   },
 
-  stationCard: {
+  healthBadge: {
+    position: "absolute",
+    top: 6,
+    right: 6,
+    backgroundColor: GREEN,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+
+  healthBadgeText: {
+    color: "#FFFFFF",
+    fontSize: 11,
+    fontWeight: "800",
+  },
+
+  walletCard: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#EEEEEE",
-    borderRadius: 16,
-    padding: 14,
+    backgroundColor: DARK,
+    borderRadius: 18,
+    padding: 16,
+    marginTop: 24,
+    gap: 12,
   },
 
-  stationIconWrap: {
+  walletIconWrap: {
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: YELLOW_LIGHT,
+    backgroundColor: "rgba(255,217,0,0.15)",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
   },
 
-  stationName: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: DARK,
-  },
-
-  stationAddress: {
+  walletLabel: {
     fontSize: 12,
-    color: "#888888",
+    color: "#AAAAAA",
+  },
+
+  walletValue: {
+    fontSize: 18,
+    fontWeight: "800",
+    color: "#FFFFFF",
     marginTop: 2,
   },
 
-  stationMetaRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    marginTop: 6,
+  rechargeButton: {
+    backgroundColor: YELLOW,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
   },
 
-  stationMetaText: {
-    fontSize: 11,
-    color: "#888888",
-  },
-
-  stationDot: {
-    fontSize: 11,
-    color: "#CCCCCC",
-    marginHorizontal: 2,
-  },
-
-  stationAvailability: {
-    flexDirection: "row",
-    alignItems: "baseline",
-    marginLeft: 8,
-  },
-
-  stationAvailableNum: {
-    fontSize: 18,
+  rechargeButtonText: {
+    fontSize: 12,
     fontWeight: "800",
     color: DARK,
   },
 
-  stationAvailableOf: {
-    fontSize: 12,
-    color: "#999999",
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: DARK,
+    marginTop: 26,
+    marginBottom: 12,
   },
 
-  bottomNav: {
+  chargerCard: {
+    borderWidth: 1,
+    borderColor: GRAY_LIGHT,
+    borderRadius: 18,
+    padding: 16,
+  },
+
+  chargerHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
-    height: 76,
-    borderTopWidth: 1,
-    borderTopColor: "#EEEEEE",
-    backgroundColor: "#FFFFFF",
-    paddingTop: 8,
+    justifyContent: "space-between",
   },
 
-  navItem: {
+  chargerName: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: DARK,
+  },
+
+  availableDot: {
+    width: 9,
+    height: 9,
+    borderRadius: 5,
+    backgroundColor: GREEN,
+  },
+
+  chargerMetaRow: {
+    flexDirection: "row",
     alignItems: "center",
     gap: 4,
+    marginTop: 8,
   },
 
-  navLabel: {
-    fontSize: 10,
-    color: "#AAAAAA",
-    fontWeight: "600",
+  chargerMetaText: {
+    fontSize: 12,
+    color: GRAY_MEDIUM,
   },
 
-  navLabelActive: {
-    fontSize: 10,
+  chargerDot: {
+    fontSize: 12,
+    color: GRAY_LIGHT,
+    marginHorizontal: 2,
+  },
+
+  chargerFooterRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 16,
+  },
+
+  chargerPrice: {
+    fontSize: 14,
+    fontWeight: "800",
     color: DARK,
-    fontWeight: "700",
   },
 
-  navCenterButton: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
+  startButton: {
     backgroundColor: YELLOW,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+
+  startButtonText: {
+    fontSize: 12,
+    fontWeight: "800",
+    color: DARK,
+  },
+
+  sessionCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: GRAY_LIGHT,
+    borderRadius: 16,
+    padding: 14,
+    gap: 12,
+  },
+
+  sessionIconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: YELLOW_LIGHT,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -28,
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
   },
+
+  sessionPrice: {
+    fontSize: 14,
+    fontWeight: "800",
+    color: DARK,
+  },
+
+  sessionMeta: {
+    fontSize: 11,
+    color: GRAY_MEDIUM,
+    marginTop: 2,
+  },
+
 });
