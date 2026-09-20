@@ -30,9 +30,29 @@ O sistema integra 2 camadas:
 | backend/ | API REST com dados mockados de estações | Node.js, Express 5, CORS, nodemon |
 | mobile/ | App mobile (iOS, Android e web) | React Native 0.86, Expo SDK 57, Expo Router |
 
------
-
-## Instruções de funcionamento
+----
+## Estrutura do repositório
+----
+```text
+├── backend/
+│   └── src/
+│       ├── server.js          # app Express e rotas
+│       └── mocks/
+│           ├── stations.js    # estações mockadas
+│           └── chargers.js    # carregadores mockados
+├── mobile/
+│   ├── src/
+│   │   ├── app/               # telas (rotas do Expo Router)
+│   │   ├── components/        # Header, BottomNav, RechargeModal
+│   │   └── constants/
+│   │       └── theme.js       # paleta de cores
+│   ├── services/
+│   │   └── api.js             # cliente HTTP da API
+│   └── assets/                # ícones e imagens
+└── docs/                      # diagramas e capturas do protótipo
+```
+---
+## Como executar
 
 #### Pré-requisitos: Node.js 18+ e npm. Para rodar no celular, o app Expo Go.
 --- 
@@ -70,7 +90,7 @@ npm start       # abre o Expo Dev Server (QR Code para o Expo Go)
 
 ---
 
-## Problema Inicial da GodWe
+## 1. Problema Inicial da GodWe
 ---
 Eletropostos comerciais operam hoje sem inteligência integrada:
 
@@ -83,7 +103,7 @@ Eletropostos comerciais operam hoje sem inteligência integrada:
 * Falta de visibilidade: usuário não sabe status, custo nem tempo restante
 ---
 
-## Nossa solução -> Aplicar os 3 Pilares da GodWe
+## 2. Nossa solução -> Aplicar os 3 Pilares da GodWe
 ----
 
 #### 01) Gerenciamento Inteligente de Demanda de Potência
@@ -159,9 +179,21 @@ estimativa de tempo e custo antes de iniciar.
 
 *fazer!****
 
----
+------
+## API 
+
+Base URL padrão: http://localhost:3000
+
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| GET | / | Health check da API |
+| GET | /stations | Lista todas as estações |
+| GET | /stations/:id | Detalhe de uma estação (404 se não existir) |
+
+
 
 ## Protótipo - Imagens
+---
 
 #### 1) Splash / Login do Usuário 
 <table>
@@ -255,46 +287,29 @@ Exemplo de cálculo da sessão (dados gerados pelo app):
 -----
 ## Conexão com os conteúdos da disciplina
 ----
-Arquitetura cliente-servidor e APIs REST — separação entre app (cliente) e serviço HTTP, uso correto de verbos, recursos e códigos de status (200/404).
 
-Integração de sistemas — consumo assíncrono da API por fetch, tratamento de erro e serialização JSON.
+O projeto busca tornar o carregamento de veículos elétricos mais **eficiente, inteligente e sustentável**, integrando tecnologia, gestão energética e o ecossistema de inversores solares GoodWe.
 
-Desenvolvimento mobile multiplataforma — componentização, estado (useState, useEffect, useMemo), ciclo de vida e navegação entre telas.
+* **Redução do desperdício energético:** o algoritmo de eficiência reduz a potência após 80% de carga, evitando o uso desnecessário de energia e aproveitando melhor a geração solar dos inversores GoodWe.
 
-Modelagem de dados — entidades Station e Charger e seus relacionamentos.
+* **Controle de demanda:** o balanceamento automático da carga evita sobrecargas na rede elétrica e reduz a necessidade de fontes emergenciais de energia, que podem apresentar maior custo e impacto ambiental.
 
-Experiência do usuário / prototipação — fluxo completo do usuário, feedback visual e animações durante a sessão de recarga.
+* **Tarifação consciente:** a diferenciação dos valores de acordo com os horários de pico incentiva o carregamento em períodos de menor demanda, contribuindo para um uso mais eficiente da infraestrutura elétrica.
 
-Sistemas embarcados e eletromobilidade — representação das grandezas de recarga (potência em kW, energia em kWh, tipos de conector CCS2 e Type 2) e do ciclo de uma sessão de carregamento.
+* **Integração com energia renovável:** o sistema foi pensado para trabalhar em conjunto com os inversores solares GoodWe, buscando direcionar a energia gerada pelos painéis para o carregamento dos veículos de forma mais eficiente.
 
-----
-## Estrutura do repositório
-----
-```text
-├── backend/
-│   └── src/
-│       ├── server.js          # app Express e rotas
-│       └── mocks/
-│           ├── stations.js    # estações mockadas
-│           └── chargers.js    # carregadores mockados
-├── mobile/
-│   ├── src/
-│   │   ├── app/               # telas (rotas do Expo Router)
-│   │   ├── components/        # Header, BottomNav, RechargeModal
-│   │   └── constants/
-│   │       └── theme.js       # paleta de cores
-│   ├── services/
-│   │   └── api.js             # cliente HTTP da API
-│   └── assets/                # ícones e imagens
-└── docs/                      # diagramas e capturas do protótipo
-```
+* **Arquitetura cliente-servidor e APIs REST:** separação entre aplicativo e serviço HTTP, utilizando recursos, verbos e códigos de status adequados, como `200` e `404`.
 
----
-## API 
-Base URL padrão: http://localhost:3000
+* **Integração de sistemas:** consumo assíncrono da API com `fetch`, tratamento de erros e serialização de dados em JSON.
 
-| Método | Rota | Descrição |
-| --- | --- | --- |
-| GET | / | Health check da API |
-| GET | /stations | Lista todas as estações |
-| GET | /stations/:id | Detalhe de uma estação (404 se não existir) |
+* **Desenvolvimento mobile multiplataforma:** utilização de componentes reutilizáveis, gerenciamento de estado com `useState`, `useEffect` e `useMemo`, além de navegação e ciclo de vida das telas.
+
+* **Modelagem de dados:** representação das entidades `Station` e `Charger` e seus relacionamentos para organizar as informações das estações e carregadores.
+
+* **Experiência do usuário:** criação do fluxo completo de uma sessão de recarga, com feedbacks visuais, animações e informações sobre o andamento do carregamento.
+
+* **Sistemas embarcados e eletromobilidade:** representação de grandezas como potência (`kW`) e energia (`kWh`), tipos de conectores como **CCS2** e **Type 2**, e das diferentes etapas de uma sessão de carregamento.
+
+> O projeto conecta **desenvolvimento de software, gestão inteligente de energia, energia renovável e mobilidade elétrica**, buscando otimizar o uso da energia e da infraestrutura disponível.
+
+
