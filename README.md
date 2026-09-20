@@ -175,9 +175,9 @@ estimativa de tempo e custo antes de iniciar.
 * Carteira: saldo, métodos de pagamento (Pix, cartão) e recarga de créditos por valores pré-definidos ou personalizados.
 --
 
-## Arquitetura  - FALTA FAZER 
+## Arquitetura  - 
 
-*fazer!****
+https://docs.google.com/document/d/1C4joZcvgF5iEE5yCr6LJx5lVqMTFCgKZGueW-ReUIMM/edit?usp=sharing
 
 ------
 ## API 
