@@ -175,9 +175,10 @@ estimativa de tempo e custo antes de iniciar.
 * Carteira: saldo, métodos de pagamento (Pix, cartão) e recarga de créditos por valores pré-definidos ou personalizados.
 --
 
-## Arquitetura  - FALTA FAZER 
+## Arquitetura  
 
-*fazer!****
+https://docs.google.com/document/d/1C4joZcvgF5iEE5yCr6LJx5lVqMTFCgKZGueW-ReUIMM/edit?usp=sharing
+
 
 ------
 ## API 
@@ -195,7 +196,7 @@ Base URL padrão: http://localhost:3000
 ## Protótipo - Imagens
 ---
 
-#### 1) Login do Usuário 
+#### 1) Splash / Login do Usuário 
 <table>
   <tr>
     <td><img width="250" alt="WhatsApp Image 2026-09-20 at 11 33 09" src="https://github.com/user-attachments/assets/19d49d6e-5f82-4cb5-8fa2-0747bb906f66" />
