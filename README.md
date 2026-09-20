@@ -127,9 +127,9 @@ estimativa de tempo e custo antes de iniciar.
 #### 1) Splash / Login do Usuário 
 <table>
   <tr>
-    <td><img width="565" height="1280" alt="WhatsApp Image 2026-09-20 at 11 33 09" src="https://github.com/user-attachments/assets/19d49d6e-5f82-4cb5-8fa2-0747bb906f66" />
+    <td><img width="250" alt="WhatsApp Image 2026-09-20 at 11 33 09" src="https://github.com/user-attachments/assets/19d49d6e-5f82-4cb5-8fa2-0747bb906f66" />
 </td>
-    <td><img width="584" height="1280" alt="WhatsApp Image 2026-09-20 at 11 33 09 (1)" src="https://github.com/user-attachments/assets/6bdb6925-a45d-46da-b67f-b8396ac1b97a" /></td>
+    <td><img width="250" alt="WhatsApp Image 2026-09-20 at 11 33 09 (1)" src="https://github.com/user-attachments/assets/6bdb6925-a45d-46da-b67f-b8396ac1b97a" /></td>
   </tr>
   <tr>
     <td align="center"><b>Abertura APP</b></td>
@@ -141,8 +141,8 @@ estimativa de tempo e custo antes de iniciar.
 #### 2) Home - Tela Inicial 
 <table>
   <tr>
-    <td><img width="577" height="1280" alt="WhatsApp Image 2026-09-20 at 11 33 09 (2)" src="https://github.com/user-attachments/assets/b8220b9e-be57-4a46-93c5-35b3f6303d81" /></td>
-    <td><img width="1010" height="1235" alt="WhatsApp Image 2026-09-20 at 11 39 44" src="https://github.com/user-attachments/assets/4a9b9dca-7638-45b4-b986-d40cfc29ec28" /></td>
+    <td><img width="250" alt="WhatsApp Image 2026-09-20 at 11 33 09 (2)" src="https://github.com/user-attachments/assets/b8220b9e-be57-4a46-93c5-35b3f6303d81" /></td>
+    <td><img width="250" alt="WhatsApp Image 2026-09-20 at 11 39 44" src="https://github.com/user-attachments/assets/4a9b9dca-7638-45b4-b986-d40cfc29ec28" /></td>
   </tr>
   <tr>
     <td align="center"><b>Tela Inicial</b></td>
@@ -151,9 +151,81 @@ estimativa de tempo e custo antes de iniciar.
 </table>
 
 #### 3) Seleção de conector - Escolher carregador disponível
+<table>
+  <tr>
+    <td><img width="250" alt="image" src="https://github.com/user-attachments/assets/42a867e7-5580-4a88-8197-9c8aacf8e3e3" /></td>
+    <td><img width="250" alt="image" src="https://github.com/user-attachments/assets/46d64f6d-172d-4f57-b282-b97e4c11fc85" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Clicar em "Iniciar Carregamento"</b></td>
+    <td align="center"><b>Selecionar Conector</b></td>
+  </tr>
+</table>
+
 #### 4) Sessão de carregamento
-#### 5) Resumo da sessão
-#### 6) Carteira
+<table>
+  <tr>
+    <td><img width="1010" height="1594" alt="image" src="https://github.com/user-attachments/assets/e61a34d2-64ce-4c0e-b073-729084b6f1ad" /></td>
+    <td><img width="1170" height="1483" alt="image" src="https://github.com/user-attachments/assets/803453a5-7bdc-4532-bccc-88cca93cc73c" /></td>
+    <td><img width="782" height="1600" alt="image" src="https://github.com/user-attachments/assets/85b77b5b-54af-4104-8253-28c17fc0cc8e" /></td>
+    <td><img width="728" height="1600" alt="image" src="https://github.com/user-attachments/assets/4ac743f2-00f3-43f1-9ad3-fda58f9c4316" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Carregador conectando</b></td>
+    <td align="center"><b>Carregador conectado</b></td>
+    <td align="center"><b>Carregando</b></td>
+    <td align="center"><b>Sessão Finalizada</b></td>
+    
+  </tr>
+</table>
+
+#### 5) Resumo da sessão e Carteira
+<table>
+  <tr>
+    <td><img width="300" alt="image" src="https://github.com/user-attachments/assets/f3fd3316-4385-462c-87b4-b11688976eaa" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Fatura</b></td>
+  </tr>
+</table>
+
+## Justificativa técnica das escolhas
+FALTA FAZER !!!!! 
+--
+
+## Resultados e dados funcionais
+
+| Cenário | Resultado Esperado |
+| :--- | :--- |
+| **1.** Login com usuário mockado | Redireciona para a Home |
+| **2.** Login com credenciais inválidas | Alerta de erro, permanece na tela |
+| **3.** `GET /stations` | `200` com a lista de estações |
+| **4.** `GET /stations/:id` inexistente | `404` "Estação não encontrada" |
+| **5.** Seleção de conector com meta de kWh | Estimativa de tempo e custo exibida antes de iniciar |
+| **6.** Sessão de carregamento até a meta | Encerra sozinha e abre o resumo |
+| **7.** Parada manual da sessão | Resumo com kWh e custo parciais |
+| **8.** Recarga de créditos na carteira | Saldo atualizado |
+
+Exemplo de cálculo da sessão (dados gerados pelo app):
+
+> **velocidade:** Rápido → 0,20 kWh/s  
+> **meta:** 8,5 kWh → ~43 s de simulação  
+> **preço:** R$ 2,19 / kWh (estação ChargeGrid)  
+> **custo:** 8,5 × 2,19 = R$ 18,62
+
+## Conexão com os conteúdos da disciplina
+Arquitetura cliente-servidor e APIs REST — separação entre app (cliente) e serviço HTTP, uso correto de verbos, recursos e códigos de status (200/404).
+
+Integração de sistemas — consumo assíncrono da API por fetch, tratamento de erro e serialização JSON.
+
+Desenvolvimento mobile multiplataforma — componentização, estado (useState, useEffect, useMemo), ciclo de vida e navegação entre telas.
+
+Modelagem de dados — entidades Station e Charger e seus relacionamentos.
+
+Experiência do usuário / prototipação — fluxo completo do usuário, feedback visual e animações durante a sessão de recarga.
+
+Sistemas embarcados e eletromobilidade — representação das grandezas de recarga (potência em kW, energia em kWh, tipos de conector CCS2 e Type 2) e do ciclo de uma sessão de carregamento.
+
 
 
 
