@@ -32,8 +32,46 @@ O sistema integra 2 camadas:
 
 -----
 
-## Problema Inicial da GodWe
+## Instruções de funcionamento
 
+#### Pré-requisitos: Node.js 18+ e npm. Para rodar no celular, o app Expo Go.
+--- 
+#### 1. Backend
+```bash
+cd backend
+npm install
+npm run dev     # com recarga automática (nodemon)
+# ou: npm start
+```
+A API sobe em http://localhost:3000. Teste com curl http://localhost:3000/stations.
+
+#### 2. Mobile
+```bash
+cd mobile
+npm install
+npm start       # abre o Expo Dev Server (QR Code para o Expo Go)
+# ou: npm run android | npm run ios | npm run web
+```
+> ⚠️ **Importante:** O endereço da API fica em `mobile/services/api.js` (`API_URL`).  
+> Ao rodar em um dispositivo físico, `localhost` aponta para o próprio celular — troque pelo IP da sua máquina na rede local (ex.: `http://192.168.0.10:3000`) e mantenha celular e computador na mesma rede.
+
+#### 3. Demonstração
+1. Faça login com usuario@chargegrid.com / 123456.
+2. Na Home, abra o mapa e escolha uma estação.
+3. Selecione o conector, a velocidade e a meta de energia.
+4. Simule a inserção do cabo e acompanhe a sessão até a meta (ou pare manualmente).
+5. Confira o resumo e o impacto no saldo da carteira.
+
+### Observações
+>  **Observações Importantes:**
+> - **Dados Mockados:** Não há banco de dados, autenticação real nem integração de pagamento.
+> - **Simulação de Carregamento:** Toda a lógica de velocidade, kWh acumulado e custo roda no cliente, localizada em `mobile/src/app/charging-session.jsx`.
+> - **Licença:** A pasta `mobile/` possui uma licença própria no arquivo `mobile/LICENSE`.
+
+---
+
+## Problema Inicial da GodWe
+---
 Eletropostos comerciais operam hoje sem inteligência integrada:
 
 * Sobrecarga elétrica: múltiplos veículos conectados simultaneamente sem controle de demanda ultrapassam o limite da rede
@@ -45,9 +83,10 @@ Eletropostos comerciais operam hoje sem inteligência integrada:
 * Falta de visibilidade: usuário não sabe status, custo nem tempo restante
 ---
 
-## Solução -> Aplicar os 3 Pilares da GodWe
+## Nossa solução -> Aplicar os 3 Pilares da GodWe
+----
 
-#### 01 · Gerenciamento Inteligente de Demanda de Potência
+#### 01) Gerenciamento Inteligente de Demanda de Potência
 ----
 Algoritmo de balanceamento automático que divide a potência disponível igualmente entre os veículos ativos, garantindo que o total nunca ultrapasse o limite da rede.
 
@@ -76,7 +115,7 @@ energia_min = (potencia * eficiencia) / 60
 energia_min = (potencia * eficiencia) / 60
 ```
 
-#### 02 · Sistema de Cobrança Automatizado
+#### 02) Sistema de Cobrança Automatizado
 ---
 Tarifação por kWh com diferenciação de planos e geração de recibo ao final de cada sessão.
 
@@ -87,7 +126,7 @@ Tarifação por kWh com diferenciação de planos e geração de recibo ao final
 
 Ajuste por horário de pico (17h–21h): acréscimo de R$ 0,30/kWh.
 
-#### 03 · Interface para o Usuário — App FlowK
+#### 03) Interface para o Usuário — App FlowK
 ---
 Aplicativo mobile com monitoramento em tempo real:
 
@@ -213,7 +252,9 @@ Exemplo de cálculo da sessão (dados gerados pelo app):
 > **preço:** R$ 2,19 / kWh (estação ChargeGrid)  
 > **custo:** 8,5 × 2,19 = R$ 18,62
 
+-----
 ## Conexão com os conteúdos da disciplina
+----
 Arquitetura cliente-servidor e APIs REST — separação entre app (cliente) e serviço HTTP, uso correto de verbos, recursos e códigos de status (200/404).
 
 Integração de sistemas — consumo assíncrono da API por fetch, tratamento de erro e serialização JSON.
@@ -226,7 +267,34 @@ Experiência do usuário / prototipação — fluxo completo do usuário, feedba
 
 Sistemas embarcados e eletromobilidade — representação das grandezas de recarga (potência em kW, energia em kWh, tipos de conector CCS2 e Type 2) e do ciclo de uma sessão de carregamento.
 
+----
+## Estrutura do repositório
+----
+```text
+├── backend/
+│   └── src/
+│       ├── server.js          # app Express e rotas
+│       └── mocks/
+│           ├── stations.js    # estações mockadas
+│           └── chargers.js    # carregadores mockados
+├── mobile/
+│   ├── src/
+│   │   ├── app/               # telas (rotas do Expo Router)
+│   │   ├── components/        # Header, BottomNav, RechargeModal
+│   │   └── constants/
+│   │       └── theme.js       # paleta de cores
+│   ├── services/
+│   │   └── api.js             # cliente HTTP da API
+│   └── assets/                # ícones e imagens
+└── docs/                      # diagramas e capturas do protótipo
+```
 
+---
+## API 
+Base URL padrão: http://localhost:3000
 
-
-
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| GET | / | Health check da API |
+| GET | /stations | Lista todas as estações |
+| GET | /stations/:id | Detalhe de uma estação (404 se não existir) |
